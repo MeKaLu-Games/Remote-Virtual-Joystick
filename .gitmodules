@@ -1,0 +1,7 @@
+[submodule "src/godot/gdnative_cpp_example/godot-cpp"]
+	path = src/godot/gdnative_cpp_example/godot-cpp
+	url = https://github.com/godotengine/godot-cpp
+	branch = 3.x
+[submodule "src/ViGEmClient"]
+	path = src/ViGEmClient
+	url = https://github.com/ViGEm/ViGEmClient

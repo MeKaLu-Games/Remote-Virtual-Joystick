@@ -1,0 +1,68 @@
+#!python
+import os
+
+opts = Variables([], ARGUMENTS)
+
+# Define the relative path to the Godot headers.
+godot_headers_path = "godot-cpp/godot-headers"
+godot_bindings_path = "godot-cpp"
+
+# Gets the standard flags CC, CCX, etc.
+env = DefaultEnvironment()
+
+opts.Add(EnumVariable("target", "Compilation target", "debug", ["d", "debug", "r", "release"]))
+opts.Add(PathVariable("target_path", "The path where the lib is installed.", "godot-cpp/"))
+opts.Add(PathVariable("target_name", "The library name.", "libvigem", PathVariable.PathAccept))
+
+# Updates the environment with the option variables.
+opts.Update(env)
+
+platform = "windows"
+
+# This makes sure to keep the session environment variables
+# on Windows, so that you can run scons in a VS 2017 prompt
+# and it will find all the required tools.
+env = Environment(ENV=os.environ)
+opts.Update(env)
+
+env.Append(CCFLAGS=["-DWIN32", "-D_WIN32", "-D_WINDOWS", "-W3", "-GR", "-D_CRT_SECURE_NO_WARNINGS"])
+if env["target"] in ("debug", "d"):
+    env.Append(CCFLAGS=["-EHsc", "-D_DEBUG", "-MDd"])
+else:
+    env.Append(CCFLAGS=["-O2", "-EHsc", "-DNDEBUG", "-MD"])
+
+SConscript("godot-cpp/SConstruct")
+
+
+def add_sources(sources, dir):
+    for f in os.listdir(dir):
+        if f.endswith(".cpp"):
+            sources.append(dir + "/" + f)
+
+
+env.Append(
+    CPPPATH=[
+        "../ViGEmClient/include/",
+        godot_headers_path,
+        godot_bindings_path + "/include",
+        godot_bindings_path + "/include/gen/",  
+        godot_bindings_path + "/include/core/",
+    ]
+)
+
+env.Append(
+    LIBS=[
+        env.File(os.path.join("godot-cpp/bin", "libgodot-cpp.%s.%s.64%s" % (platform, env["target"], env["LIBSUFFIX"]))),
+        # dont forget to add the dll file into modules folder as a dependency ^_^
+        env.File(os.path.join("../ViGEmClient/bin/%s/x64/ViGEmClient.lib" % (env["target"]))),
+    ]
+)
+
+env.Append(LIBPATH=[godot_bindings_path + "/bin/"])
+env.Append(LIBPATH=["../ViGEmClient/bin/"])
+
+sources = []
+add_sources(sources, "src")
+
+library = env.SharedLibrary(target=env["target_path"] + "/" + platform + "/" + env["target_name"], source=sources)
+Default(library)

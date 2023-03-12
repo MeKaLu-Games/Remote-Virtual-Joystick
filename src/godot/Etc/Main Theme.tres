@@ -1,0 +1,17 @@
+[gd_resource type="Theme" load_steps=5 format=2]
+
+[ext_resource path="res://Etc/Main Theme Font.tres" type="DynamicFont" id=1]
+[ext_resource path="res://Etc/hover.tres" type="StyleBox" id=2]
+[ext_resource path="res://Etc/slider.tres" type="StyleBox" id=3]
+[ext_resource path="res://Etc/normal.tres" type="StyleBox" id=4]
+
+[resource]
+default_font = ExtResource( 1 )
+Button/colors/font_color = Color( 0.0941176, 0.0941176, 0.0941176, 1 )
+Button/colors/font_color_hover = Color( 0.898039, 0.890196, 0.890196, 1 )
+Button/colors/font_color_pressed = Color( 0.898039, 0.890196, 0.890196, 1 )
+Button/styles/hover = ExtResource( 2 )
+Button/styles/normal = ExtResource( 4 )
+Button/styles/pressed = ExtResource( 2 )
+HSlider/styles/slider = ExtResource( 3 )
+VSlider/styles/slider = ExtResource( 3 )

@@ -1,0 +1,8 @@
+src/__pycache__/*
+src/godot/Exports/*
+src/godot/Modules/*.dll
+src/godot/.import/*
+*.pdb
+*.obj
+*.dblite
+*.idb
